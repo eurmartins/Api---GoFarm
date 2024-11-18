@@ -18,13 +18,11 @@ public class EstoquedeSementesController {
     @Autowired
     private EstoquedeSementesService estoquedeSementesService;
 
-
     @PostMapping
     public ResponseEntity<EstoquedeSementesEntity> criarSemente(@RequestBody EstoquedeSementes semente) {
         EstoquedeSementesEntity novaSemente = estoquedeSementesService.criarSemente(semente);
         return new ResponseEntity<>(novaSemente, HttpStatus.CREATED);
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<EstoquedeSementesEntity> atualizarSemente(
@@ -38,7 +36,6 @@ public class EstoquedeSementesController {
         }
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluirSemente(@PathVariable int id) {
         boolean excluido = estoquedeSementesService.excluirSemente(id);
@@ -49,10 +46,20 @@ public class EstoquedeSementesController {
         }
     }
 
-
     @GetMapping
     public ResponseEntity<List<EstoquedeSementesEntity>> mostrarTodasSementes() {
         List<EstoquedeSementesEntity> sementes = estoquedeSementesService.mostrarTodasSementes();
         return new ResponseEntity<>(sementes, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EstoquedeSementesEntity> procurarSementePorId(@PathVariable int id) {
+        EstoquedeSementesEntity semente = estoquedeSementesService.procurarPorId(id);
+        if (semente != null) {
+            return new ResponseEntity<>(semente, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

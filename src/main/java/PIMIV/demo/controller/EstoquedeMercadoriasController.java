@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -69,4 +70,17 @@ public class EstoquedeMercadoriasController {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(mercadorias, HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EstoquedeMercadorias> mostrarMercadoriaPorId(@PathVariable int id) {
+        Optional<EstoquedeMercadoriasEntity> entity = estoquedeMercadoriasService.procurarMercadoriaPorId(id);
+        if (entity.isPresent()) {
+            EstoquedeMercadorias mercadoria = convertToModel(entity.get());
+            return new ResponseEntity<>(mercadoria, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 }

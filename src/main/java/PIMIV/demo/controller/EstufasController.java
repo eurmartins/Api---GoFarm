@@ -1,8 +1,6 @@
 package PIMIV.demo.controller;
 
-import PIMIV.demo.entity.EstoquedeMercadoriasEntity;
 import PIMIV.demo.entity.EstufasEntity;
-import PIMIV.demo.model.EstoquedeMercadorias;
 import PIMIV.demo.model.Estufas;
 import PIMIV.demo.service.EstufasService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,6 @@ public class EstufasController {
     @Autowired
     private EstufasService estufasService;
 
-
     private Estufas convertToModel(EstufasEntity entity) {
         Estufas model = new Estufas();
         model.setNome(entity.getNome());
@@ -28,15 +25,12 @@ public class EstufasController {
         return model;
     }
 
-
     @PostMapping
     public ResponseEntity<Estufas> criarEstufa(@RequestBody Estufas estufa) {
         EstufasEntity estufasEntity = estufasService.criarEstufa(estufa);
         Estufas novaEstufa = convertToModel(estufasEntity);
         return new ResponseEntity<>(novaEstufa, HttpStatus.CREATED);
     }
-
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluirMercadoria(@PathVariable int id) {
@@ -49,12 +43,9 @@ public class EstufasController {
         }
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<Estufas> atualizarEstufas(@PathVariable int id, @RequestBody Estufas estufaAtualizada) {
-
         EstufasEntity estufaAtualizadaEntity = estufasService.atualizarEstufa(id, estufaAtualizada);
-
 
         if (estufaAtualizadaEntity != null) {
             Estufas estufaAtualizadaModel = convertToModel(estufaAtualizadaEntity);
@@ -64,8 +55,6 @@ public class EstufasController {
         }
     }
 
-
-
     @GetMapping
     public ResponseEntity<List<Estufas>> listarEstufas() {
         List<EstufasEntity> estufasEntities = estufasService.mostrarTodasEstufas();
@@ -73,5 +62,17 @@ public class EstufasController {
                 .map(this::convertToModel)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(estufas, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Estufas> buscarEstufaPorId(@PathVariable int id) {
+        EstufasEntity estufaEntity = estufasService.buscarEstufaPorId(id);
+        if (estufaEntity != null) {
+            Estufas estufa = convertToModel(estufaEntity);
+            return new ResponseEntity<>(estufa, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

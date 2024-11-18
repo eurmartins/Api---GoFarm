@@ -1,10 +1,6 @@
 package PIMIV.demo.service;
 
 import PIMIV.demo.entity.CulturasEntity;
-import PIMIV.demo.entity.EstufasEntity;
-import PIMIV.demo.entity.FuncionarioEntity;
-import PIMIV.demo.model.Culturas;
-import PIMIV.demo.model.Funcionario;
 import PIMIV.demo.repository.CulturasRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +17,7 @@ public class CulturasService {
     private final CulturasRepository culturasRepository;
 
 
-    public boolean adicionarCultura(Culturas culturas) {
+    public boolean adicionarCultura(CulturasEntity culturas) {
 
         CulturasEntity entity = new CulturasEntity();
         entity.setNome(culturas.getNome());
@@ -32,6 +28,7 @@ public class CulturasService {
         entity.setRequisitos_umidade(culturas.getRequisitos_umidade());
         entity.setPragas_doencas(culturas.getPragas_doencas());
         entity.setTempo_colheita(culturas.getTempo_colheita());
+        entity.setCiclo_vida(culturas.getCiclo_vida());
         culturasRepository.save(entity);
 
         return true;
@@ -71,4 +68,9 @@ public class CulturasService {
     public List<CulturasEntity> listarCulturas() {
         return culturasRepository.findAll();
     }
+
+    public Optional<CulturasEntity> procurarCulturaPorId(int id) {
+        return culturasRepository.findById(id);
+    }
+
 }

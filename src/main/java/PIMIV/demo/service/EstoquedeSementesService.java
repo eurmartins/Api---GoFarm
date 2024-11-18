@@ -59,4 +59,9 @@ public class EstoquedeSementesService {
     public List<EstoquedeSementesEntity> mostrarTodasSementes() {
         return estoquedeSementesRepository.findAll();
     }
+
+    public EstoquedeSementesEntity procurarPorId(int id) {
+        Optional<EstoquedeSementesEntity> semente = estoquedeSementesRepository.findById(id);
+        return semente.orElse(null);
+    }
 }

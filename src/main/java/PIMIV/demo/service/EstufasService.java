@@ -22,26 +22,24 @@ public class EstufasService {
         return entity;
     }
 
-
     public EstufasEntity criarEstufa(Estufas estufas){
         EstufasEntity entity = convertToEntity(estufas);
         return estufasRepository.save(entity);
     }
 
     public EstufasEntity atualizarEstufa(int id, Estufas estufaAtualizada){
-        Optional<EstufasEntity> estufaExistente =  estufasRepository.findById((int) id);
+        Optional<EstufasEntity> estufaExistente =  estufasRepository.findById(id);
         if(estufaExistente.isPresent()){
             EstufasEntity estufa = estufaExistente.get();
             estufa.setNome(estufaAtualizada.getNome());
-            estufa.setLocalizacao(estufa.getLocalizacao());
+            estufa.setLocalizacao(estufaAtualizada.getLocalizacao());
             return estufasRepository.save(estufa);
         }
         return null;
     }
 
-
     public boolean excluirEstufa(int id) {
-        Optional<EstufasEntity> estufas = estufasRepository.findById((int) id);
+        Optional<EstufasEntity> estufas = estufasRepository.findById(id);
         if (estufas.isPresent()) {
             estufasRepository.delete(estufas.get());
             return true;
@@ -49,8 +47,13 @@ public class EstufasService {
         return false;
     }
 
-
     public List<EstufasEntity> mostrarTodasEstufas() {
         return estufasRepository.findAll();
+    }
+
+
+    public EstufasEntity buscarEstufaPorId(int id) {
+        Optional<EstufasEntity> estufa = estufasRepository.findById(id);
+        return estufa.orElse(null);
     }
 }

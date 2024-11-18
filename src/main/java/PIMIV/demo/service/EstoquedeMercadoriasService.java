@@ -59,4 +59,9 @@ public class EstoquedeMercadoriasService {
     public List<EstoquedeMercadoriasEntity> mostrarTodasMercadorias() {
         return estoquedeMercadoriasRepository.findAll();
     }
+
+    public Optional<EstoquedeMercadoriasEntity> procurarMercadoriaPorId(int id) {
+        return estoquedeMercadoriasRepository.findById((long) id);
+    }
+
 }
