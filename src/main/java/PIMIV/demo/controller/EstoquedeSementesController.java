@@ -20,8 +20,12 @@ public class EstoquedeSementesController {
 
     @PostMapping
     public ResponseEntity<EstoquedeSementesEntity> criarSemente(@RequestBody EstoquedeSementes semente) {
-        EstoquedeSementesEntity novaSemente = estoquedeSementesService.criarSemente(semente);
-        return new ResponseEntity<>(novaSemente, HttpStatus.CREATED);
+        try {
+            EstoquedeSementesEntity novaSemente = estoquedeSementesService.criarSemente(semente);
+            return new ResponseEntity<>(novaSemente, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")

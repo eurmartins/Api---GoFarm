@@ -1,8 +1,11 @@
 package PIMIV.demo.service;
 
 import PIMIV.demo.entity.EstoquedeSementesEntity;
+import PIMIV.demo.entity.FornecedoresEntity;
 import PIMIV.demo.model.EstoquedeSementes;
+import PIMIV.demo.model.Fornecedores;
 import PIMIV.demo.repository.EstoquedeSementesRepository;
+import PIMIV.demo.repository.FornecedoresRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +18,21 @@ public class EstoquedeSementesService {
     @Autowired
     private EstoquedeSementesRepository estoquedeSementesRepository;
 
+    @Autowired
+    private FornecedoresRepository fornecedoresRepository; // Adicione esta linha
 
     private EstoquedeSementesEntity convertToEntity(EstoquedeSementes sementes) {
         EstoquedeSementesEntity entity = new EstoquedeSementesEntity();
         entity.setNome(sementes.getNome());
         entity.setTipo_cultura(sementes.getTipo_cultura());
         entity.setQuantidade(sementes.getQuantidade());
-        entity.setFornecedor_id(sementes.getFornecedor_id());
+
+        FornecedoresEntity fornecedor = fornecedoresRepository.findById(sementes.getFornecedor().getId_fornecedor())
+                .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado com ID: " + sementes.getFornecedor().getId_fornecedor()));
+
+        entity.setFornecedor(fornecedor);
         return entity;
     }
-
 
     public EstoquedeSementesEntity criarSemente(EstoquedeSementes sementes) {
         EstoquedeSementesEntity entity = convertToEntity(sementes);
@@ -39,7 +47,7 @@ public class EstoquedeSementesService {
             semente.setNome(sementeAtualizada.getNome());
             semente.setTipo_cultura(sementeAtualizada.getTipo_cultura());
             semente.setQuantidade(sementeAtualizada.getQuantidade());
-            semente.setFornecedor_id(sementeAtualizada.getFornecedor_id());
+            semente.setFornecedor(semente.getFornecedor());
             return estoquedeSementesRepository.save(semente);
         }
         return null;

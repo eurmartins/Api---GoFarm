@@ -1,7 +1,9 @@
 package PIMIV.demo.service;
 
 import PIMIV.demo.entity.CulturasEntity;
+import PIMIV.demo.entity.EstufasEntity;
 import PIMIV.demo.repository.CulturasRepository;
+import PIMIV.demo.repository.EstufasRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,23 +18,17 @@ public class CulturasService {
     @Autowired
     private final CulturasRepository culturasRepository;
 
+    private final EstufasRepository estufasRepository;
 
-    public boolean adicionarCultura(CulturasEntity culturas) {
 
-        CulturasEntity entity = new CulturasEntity();
-        entity.setNome(culturas.getNome());
-        entity.setTipo_cultura(culturas.getTipo_cultura());
-        entity.setRequisitos_solo(culturas.getRequisitos_solo());
-        entity.setRequisitos_agua(culturas.getRequisitos_agua());
-        entity.setIntervalo_temperatura(culturas.getIntervalo_temperatura());
-        entity.setRequisitos_umidade(culturas.getRequisitos_umidade());
-        entity.setPragas_doencas(culturas.getPragas_doencas());
-        entity.setTempo_colheita(culturas.getTempo_colheita());
-        entity.setCiclo_vida(culturas.getCiclo_vida());
-        culturasRepository.save(entity);
+    public CulturasEntity cadastrarCultura(CulturasEntity cultura) {
 
-        return true;
+        EstufasEntity estufa = estufasRepository.findById(cultura.getEstufa().getId_estufa())
+                .orElseThrow(() -> new RuntimeException("Estufa não encontrada com ID: " + cultura.getEstufa().getId_estufa()));
+        cultura.setEstufa(estufa);
+        return culturasRepository.save(cultura);
     }
+
 
 
     public boolean excluirCulturas(int id) {
@@ -58,7 +54,7 @@ public class CulturasService {
             culturas.setRequisitos_umidade(updatedCulturas.getRequisitos_umidade());
             culturas.setPragas_doencas(updatedCulturas.getPragas_doencas());
             culturas.setTempo_colheita(updatedCulturas.getTempo_colheita());
-            culturas.setEstufa_id(updatedCulturas.getEstufa_id());
+            culturas.setEstufa(updatedCulturas.getEstufa());
             return culturasRepository.save(culturas);
         }
         return null;
@@ -69,8 +65,9 @@ public class CulturasService {
         return culturasRepository.findAll();
     }
 
-    public Optional<CulturasEntity> procurarCulturaPorId(int id) {
-        return culturasRepository.findById(id);
+    public CulturasEntity procurarCulturaPorId(int id) {
+        Optional<CulturasEntity> cultura = culturasRepository.findById(id);
+        return cultura.orElse(null);
     }
 
 }

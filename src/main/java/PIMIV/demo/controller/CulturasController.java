@@ -2,6 +2,7 @@ package PIMIV.demo.controller;
 
 import PIMIV.demo.entity.CulturasEntity;
 import PIMIV.demo.model.Culturas;
+import PIMIV.demo.model.Estufas;
 import PIMIV.demo.service.CulturasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class CulturasController {
     @Autowired
     private CulturasService culturasService;
 
-    // Converte a entidade em um modelo para retornar
+
     private Culturas convertToModel(CulturasEntity entity) {
         Culturas model = new Culturas();
         model.setNome(entity.getNome());
@@ -30,15 +31,21 @@ public class CulturasController {
         model.setPragas_doencas(entity.getPragas_doencas());
         model.setTempo_colheita(entity.getTempo_colheita());
         model.setCiclo_vida(entity.getCiclo_vida());
+        model.setEstufa(Estufas.builder()
+                .nome(entity.getEstufa().getNome())
+                .localizacao(entity.getEstufa().getLocalizacao())
+                .id_estufas(entity.getEstufa().getId_estufa())
+                .build());
         return model;
     }
 
 
     @PostMapping
-    public ResponseEntity<Boolean> criarCultura(@RequestBody CulturasEntity cultura) {
-        boolean culturaSalva = culturasService.adicionarCultura(cultura);
-        return ResponseEntity.status(HttpStatus.CREATED).body(culturaSalva);
+    public ResponseEntity<CulturasEntity> cadastrarCultura(@RequestBody CulturasEntity cultura) {
+        CulturasEntity novaCultura = culturasService.cadastrarCultura(cultura);
+        return ResponseEntity.ok(novaCultura);
     }
+
 
 
     @DeleteMapping("/{id}")
@@ -68,13 +75,14 @@ public class CulturasController {
     }
 
 
-    @GetMapping("/CulturaPorId/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Culturas> getCulturaById(@PathVariable int id) {
-        Optional<CulturasEntity> culturaEntity = culturasService.procurarCulturaPorId(id);
-        if (culturaEntity.isPresent()) {
-            Culturas model = convertToModel(culturaEntity.get());
+        CulturasEntity culturaEntity = culturasService.procurarCulturaPorId(id);
+        if (culturaEntity != null) {
+            Culturas model = convertToModel(culturaEntity);
             return new ResponseEntity<>(model, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

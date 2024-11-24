@@ -2,9 +2,15 @@ package PIMIV.demo.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "estufas")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EstufasEntity {
 
     @Id
@@ -14,34 +20,9 @@ public class EstufasEntity {
     @Column(nullable = false)
     private String nome;
 
+
     @Column(nullable = false)
     private String localizacao;
 
-    public EstufasEntity(){
-    }
-
-    public int getId_estufa() {
-        return id_estufa;
-    }
-
-    public void setId_estufa(int id_estufa) {
-        this.id_estufa = id_estufa;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public String getLocalizacao() {
-        return localizacao;
-    }
-
-    public void setLocalizacao(String localizacao) {
-        this.localizacao = localizacao;
-    }
 }
 
